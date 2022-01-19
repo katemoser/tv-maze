@@ -4,8 +4,9 @@ const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
 
-const baseURL = "http://api.tvmaze.com/search/shows";
-const notFoundURL = "https://tinyurl.com/tv-missing";
+//TV_MAZE_BASE_URL
+const BASE_URL = "http://api.tvmaze.com/";
+const NOT_FOUND_URL = "https://tinyurl.com/tv-missing";
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -15,16 +16,18 @@ const notFoundURL = "https://tinyurl.com/tv-missing";
  */
 
 async function getShowsByTerm(term) {
-  let shows = [];
-  let showData = await axios.get(baseURL, {params : {q: term}});
+  let shows = []; //TODO: USE A MAP!!!!!!!!!
+  let showData = await axios.get(`${BASE_URL}search/shows`, {params : {q: term}});
+  //TODOO: rename show so it's not repeated later on on line25 etc
   for (let show of showData.data) {
 
     let showInfo = {
       id: show.show.id, 
       name: show.show.name, 
       summary: show.show.summary, 
-      image: show.show.image ? show.show.image.original : notFoundURL
+      image: show.show.image ? show.show.image.original : NOT_FOUND_URL
     };
+
     shows.push(showInfo);
   }
   console.log(shows);
