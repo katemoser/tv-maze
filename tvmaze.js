@@ -85,7 +85,21 @@ $searchForm.on("submit", async function (evt) {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) { 
+  let episodeData = await axios.get(`${BASE_URL}shows/${id}/episodes`);
+  let episodes = episodeData.data.map(makeEpisodeObj);
+  console.log(episodes);
+}
+
+function makeEpisodeObj(data) {
+  let episodeInfo = {
+    id: data.id,
+    name: data.name,
+    season: data.season,
+    number: data.number
+  };
+  return episodeInfo;
+}
 
 /** Write a clear docstring for this function... */
 
