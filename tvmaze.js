@@ -118,7 +118,13 @@ function populateEpisodes(episodes) {
 
 /** Controller for episodes */
 async function getEpisodesAndDisplay(evt){
-  console.log(`You clicked the ${evt.target}!`);
+  let elementClicked = $(evt.target);
+  console.log(`You clicked the ${elementClicked.closest("div.Show").attr("data-show-id")}!`);
+
+  const showID = elementClicked.closest("div.Show").attr("data-show-id");
+
+  let episodes = await getEpisodesOfShow(showID);
+  populateEpisodes(episodes);
   //
   //get the target from the evt so we know what was clicked
   //get the id from that show
