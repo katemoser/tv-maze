@@ -89,8 +89,11 @@ async function getEpisodesOfShow(id) {
   let episodeData = await axios.get(`${BASE_URL}shows/${id}/episodes`);
   let episodes = episodeData.data.map(makeEpisodeObj);
   console.log(episodes);
+
+  return episodes;
 }
 
+/** returns an episode object */
 function makeEpisodeObj(data) {
   let episodeInfo = {
     id: data.id,
@@ -101,6 +104,36 @@ function makeEpisodeObj(data) {
   return episodeInfo;
 }
 
+/** Takes an array of episode objects*/
+function populateEpisodes(episodes) {
+  $episodesArea.show();
+  for(let episode of episodes){
+    const $episode = $(`<li>${episode.name}
+     (Season ${episode.season}, number ${episode.number})</li>`);
+     console.log($episode);
+     $("#episodesList").append($episode);  
+    }
+
+}
+
+/** Controller for episodes */
+async function getEpisodesAndDisplay(evt){
+  console.log(`You clicked the ${evt.target}!`);
+  //
+  //get the target from the evt so we know what was clicked
+  //get the id from that show
+  //pass the id to getEpisodes
+  //take episodes and pass to populateEpisodes
+  //
+
+}
+
+//Event listener in #showsList for Show-getEpisodes button
+$("#showsList").on("click", ".Show-getEpisodes", async function (evt) {
+  evt.preventDefault();
+  await getEpisodesAndDisplay(evt);
+})
+
 /** Write a clear docstring for this function... */
 
-// function populateEpisodes(episodes) { }
+
