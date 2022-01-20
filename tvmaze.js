@@ -17,14 +17,14 @@ const NOT_FOUND_URL = "https://tinyurl.com/tv-missing";
 
 async function getShowsByTerm(term) {
   let shows = []; //TODO: USE A MAP!!!!!!!!!
-  let showData = await axios.get(`${BASE_URL}search/shows`, {params : {q: term}});
-  //TODOO: rename show so it's not repeated later on on line25 etc
+  let showData = await axios.get(`${BASE_URL}search/shows`, { params: { q: term } });
+  //TODO: rename show so it's not repeated later on on line25 etc
   for (let show of showData.data) {
 
     let showInfo = {
-      id: show.show.id, 
-      name: show.show.name, 
-      summary: show.show.summary, 
+      id: show.show.id,
+      name: show.show.name,
+      summary: show.show.summary,
       image: show.show.image ? show.show.image.original : NOT_FOUND_URL
     };
 
@@ -42,7 +42,7 @@ function populateShows(shows) {
 
   for (let show of shows) {
     const $show = $(
-        `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
+      `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
            <img 
               src="${show.image}" 
@@ -59,7 +59,8 @@ function populateShows(shows) {
        </div>
       `);
 
-    $showsList.append($show);  }
+    $showsList.append($show);
+  }
 }
 
 
@@ -84,8 +85,8 @@ $searchForm.on("submit", async function (evt) {
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
  */
-
-async function getEpisodesOfShow(id) { 
+//TODO: Const rather than let
+async function getEpisodesOfShow(id) {
   let episodeData = await axios.get(`${BASE_URL}shows/${id}/episodes`);
   let episodes = episodeData.data.map(makeEpisodeObj);
   console.log(episodes);
@@ -93,13 +94,14 @@ async function getEpisodesOfShow(id) {
   return episodes;
 }
 
-/** returns an episode object */
+//TODO: Move this function into  getEpisodesOfShow
+/** Takes data from TVMaze API, returns an episode object */
 function makeEpisodeObj(data) {
   let episodeInfo = {
     id: data.id,
     name: data.name,
     season: data.season,
-    number: data.number
+    number: data.number,
   };
   return episodeInfo;
 }
@@ -107,17 +109,22 @@ function makeEpisodeObj(data) {
 /** Takes an array of episode objects*/
 function populateEpisodes(episodes) {
   $episodesArea.show();
-  for(let episode of episodes){
+  for (let episode of episodes) {
     const $episode = $(`<li>${episode.name}
-     (Season ${episode.season}, number ${episode.number})</li>`);
-     console.log($episode);
-     $("#episodesList").append($episode);  
-    }
+      (Season ${episode.season}, number ${episode.number})</li>`);
+    console.log($episode);
+    $("#episodesList").append($episode);
+  }
 
 }
 
-/** Controller for episodes */
-async function getEpisodesAndDisplay(evt){
+/** Controller for episodes 
+ * Called when Episode button is clicked
+ * Gets show ID from the data attribute of div with "Show class"
+ * passes showId to populate episodes
+*/ 
+//CONST
+async function getEpisodesAndDisplay(evt) {
   let elementClicked = $(evt.target);
   console.log(`You clicked the ${elementClicked.closest("div.Show").attr("data-show-id")}!`);
 
@@ -125,21 +132,13 @@ async function getEpisodesAndDisplay(evt){
 
   let episodes = await getEpisodesOfShow(showID);
   populateEpisodes(episodes);
-  //
-  //get the target from the evt so we know what was clicked
-  //get the id from that show
-  //pass the id to getEpisodes
-  //take episodes and pass to populateEpisodes
-  //
 
 }
 
-//Event listener in #showsList for Show-getEpisodes button
+/**Event listener in #showsList for Show-getEpisodes button */
 $("#showsList").on("click", ".Show-getEpisodes", async function (evt) {
   evt.preventDefault();
   await getEpisodesAndDisplay(evt);
 })
-
-/** Write a clear docstring for this function... */
 
 
